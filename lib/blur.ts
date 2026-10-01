@@ -1,0 +1,2 @@
+export const SHIMMER_BLUR_DATA_URL =
+  'data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc0MDAnIGhlaWdodD0nMzAwJz48cmVjdCB3aWR0aD0nNDAwJyBoZWlnaHQ9JzMwMCcgZmlsbD0nI0VBRTNEMicvPjwvc3ZnPg==';

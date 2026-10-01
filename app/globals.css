@@ -1,0 +1,138 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* --- Theme tokens -------------------------------------------------------
+   Colours live as CSS custom properties (RGB triplets, so Tailwind's
+   /opacity modifiers keep working) rather than fixed hex values, so the
+   whole site can switch themes without touching a single component —
+   every bg-paper / text-ink / border-line class just resolves differently.
+   Same editorial identity in both themes, not a naive invert. */
+
+:root {
+  --color-paper: 243 238 225;
+  --color-paper-dim: 234 227 210;
+  --color-ink: 34 30 25;
+  --color-muted: 121 112 95;
+  --color-saffron: 193 121 28;
+  --color-teal: 31 107 103;
+  --color-brick: 162 58 46;
+  --color-line: 220 209 184;
+  color-scheme: light;
+}
+
+/* Follow system preference automatically, unless the visitor has picked
+   a theme explicitly (data-theme is only ever set by an explicit choice). */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --color-paper: 27 24 21;
+    --color-paper-dim: 38 34 32;
+    --color-ink: 237 230 216;
+    --color-muted: 167 156 135;
+    --color-saffron: 217 146 74;
+    --color-teal: 62 148 144;
+    --color-brick: 192 86 74;
+    --color-line: 58 52 46;
+    color-scheme: dark;
+  }
+}
+
+[data-theme='dark'] {
+  --color-paper: 27 24 21;
+  --color-paper-dim: 38 34 32;
+  --color-ink: 237 230 216;
+  --color-muted: 167 156 135;
+  --color-saffron: 217 146 74;
+  --color-teal: 62 148 144;
+  --color-brick: 192 86 74;
+  --color-line: 58 52 46;
+  color-scheme: dark;
+}
+
+@layer base {
+  body {
+    @apply bg-paper text-ink font-body antialiased;
+    text-rendering: optimizeLegibility;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  ::selection {
+    background: rgb(var(--color-saffron));
+    color: rgb(var(--color-paper));
+  }
+
+  a {
+    @apply underline-offset-4;
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--color-teal));
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  .rule {
+    @apply border-line;
+  }
+
+  .balance {
+    text-wrap: balance;
+  }
+
+  .drop-cap::first-letter {
+    float: left;
+    font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 3.4em;
+    line-height: 0.82;
+    padding-right: 0.09em;
+    padding-top: 0.04em;
+    color: rgb(var(--color-saffron));
+  }
+
+  /* Visually hidden until focused — the skip-to-content link. */
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 100;
+  }
+
+  .skip-link:focus {
+    left: 1rem;
+    top: 1rem;
+  }
+}
+
+@keyframes banner-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-banner-in {
+  animation: banner-in 0.25s ease-out;
+}
+
+.article-body { font-size: var(--reading-size, 18px); }
+.reading-focus body > div > header,
+.reading-focus header.site-header,
+.reading-focus footer,
+.reading-focus .related-stories { display: none; }

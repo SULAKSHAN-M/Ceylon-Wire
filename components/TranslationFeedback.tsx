@@ -1,0 +1,7 @@
+'use client';
+import { useState } from 'react';
+export function TranslationFeedback({storyId}:{storyId:number}){
+  const [message,setMessage]=useState('');const [status,setStatus]=useState('');const [busy,setBusy]=useState(false);
+  async function submit(event:React.FormEvent){event.preventDefault();setBusy(true);setStatus('');try{const res=await fetch('/api/feedback',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({storyId,message})});const data=await res.json();if(!res.ok)throw new Error(data.error);setMessage('');setStatus('Thank you. Your feedback has been saved for review.');}catch(e){setStatus(e instanceof Error?e.message:'Unable to send feedback.');}finally{setBusy(false);}}
+  return <details className="mt-6 border-t border-line pt-4 text-sm"><summary className="cursor-pointer text-muted">Report a translation issue</summary><form onSubmit={submit} className="mt-3 space-y-3"><label className="block">What should be corrected?<textarea minLength={10} maxLength={1000} required value={message} onChange={e=>setMessage(e.target.value)} className="mt-2 block w-full border border-line bg-paper p-3" rows={3}/></label><p className="text-xs text-muted">Include the phrase and suggested correction. Please do not include private information.</p><button disabled={busy} className="border border-ink px-4 py-2">{busy?'Sending…':'Submit feedback'}</button><p role="status">{status}</p></form></details>;
+}

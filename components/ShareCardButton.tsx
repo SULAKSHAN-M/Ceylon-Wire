@@ -1,0 +1,7 @@
+'use client';
+import { useState } from 'react';
+export function ShareCardButton({id}:{id:number}){
+ const [format,setFormat]=useState('landscape'),[busy,setBusy]=useState(false),[error,setError]=useState('');
+ async function download(){setBusy(true);setError('');try{const response=await fetch(`/news/${id}/card?format=${format}`);if(!response.ok)throw new Error();const blob=await response.blob();const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`ceylon-wire-${id}-${format}.png`;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}catch{setError('The image could not be generated. Please try again.');}finally{setBusy(false);}}
+ return <details className="mt-6 border-t border-line pt-4"><summary className="cursor-pointer text-sm text-muted">Create a shareable news card</summary><div className="mt-3 flex flex-wrap gap-3"><label className="text-sm">Image size <select value={format} onChange={e=>setFormat(e.target.value)} className="ml-2 border border-line bg-paper p-2"><option value="landscape">Landscape · 1200 × 630</option><option value="square">Square · 1200 × 1200</option></select></label><button disabled={busy} onClick={download} className="border border-ink px-4 py-2 text-sm">{busy?'Preparing…':'Download PNG'}</button></div><p className="mt-2 text-xs text-muted">English headline card for WhatsApp, Facebook, or Instagram. Share the article link alongside it.</p>{error?<p role="status" className="mt-2 text-sm">{error}</p>:null}</details>;
+}
